@@ -7,6 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	. "github.com/weconnect/grogg-tdd"
+	"github.com/weconnect/grogg-tdd/schema"
 )
 
 type invalidValidator struct{}
@@ -24,7 +25,7 @@ func (successValidator) Validate(str string) error {
 var _ = Describe("Main", func() {
 	Describe("#RegisterSchema", func() {
 		var (
-			validator Validator
+			validator schema.Validator
 
 			schema *Schema
 			err    error

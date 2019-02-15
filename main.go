@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/google/uuid"
+	"github.com/weconnect/grogg-tdd/schema"
 )
 
 // Schema holds both the JSON Scehma and a UUID from the database
@@ -13,16 +14,12 @@ type Schema struct {
 	ID         uuid.UUID
 }
 
-// Validator a JSON Schema validation interface
-type Validator interface {
-	Validate(string) error
-}
-
 func main() {
 	inputSchemaString := os.Args[1]
-	schema, err := RegisterSchema(inputSchemaString, nil)
+	schema, err := RegisterSchema(inputSchemaString, schema.JSONValidator{})
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 
 	fmt.Println("Saved as: " + schema.ID.String())
@@ -30,7 +27,12 @@ func main() {
 }
 
 // RegisterSchema validates and stores a new JSON Schema
-func RegisterSchema(schemaStr string, validator Validator) (*Schema, error) {
+func RegisterSchema(schemaStr string, validator schema.Validator) (*Schema, error) {
+
+	if err := validator.Validate(schemaStr); err != nil {
+		return nil, err
+	}
+
 	// TODO: implement me!
 	schema := &Schema{
 		JSONSchema: schemaStr,
