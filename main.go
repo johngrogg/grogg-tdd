@@ -13,9 +13,14 @@ type Schema struct {
 	ID         uuid.UUID
 }
 
+// Validator a JSON Schema validation interface
+type Validator interface {
+	Validate(string) error
+}
+
 func main() {
 	inputSchemaString := os.Args[1]
-	schema, err := RegisterSchema(inputSchemaString)
+	schema, err := RegisterSchema(inputSchemaString, nil)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -25,7 +30,7 @@ func main() {
 }
 
 // RegisterSchema validates and stores a new JSON Schema
-func RegisterSchema(schemaStr string) (*Schema, error) {
+func RegisterSchema(schemaStr string, validator Validator) (*Schema, error) {
 	// TODO: implement me!
 	schema := &Schema{
 		JSONSchema: schemaStr,
