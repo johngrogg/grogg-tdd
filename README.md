@@ -14,6 +14,7 @@ As you go forward in the commit history, this README will be updated with an exp
 - The schema is stored in our database only if it is a valid [JSON-Schema](https://json-schema.org) document
 
 ## Code State
+- Finished implementing the RegisterSchema, using a stub of a DataRepository. All tests passing, but the buit app encounters an error like `panic: runtime error: invalid memory address or nil pointer dereference` because the DataRepository is not actually implemented.
 - Added a new test that introduces a mock of our data repository abstraction. At this point, the entire RegisterSchema behavior is now tested (but not yet implemented).
 - Implemented the stub of a JSON Validator interface, and used it to get the test passing.
 - Introduced the first test block related to JSON Schema validation. It is currently failing, but is ready for implementation.

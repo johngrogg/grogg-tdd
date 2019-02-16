@@ -25,8 +25,8 @@ func (successValidator) Validate(str string) error {
 
 type successRepository struct{}
 
-func (successRepository) SaveSchema(schemaStr string) (*Schema, error) {
-	return &Schema{
+func (successRepository) Save(schemaStr string) (*schema.Schema, error) {
+	return &schema.Schema{
 		JSONSchema: schemaStr,
 		ID:         uuid.New(),
 	}, nil
@@ -34,7 +34,7 @@ func (successRepository) SaveSchema(schemaStr string) (*Schema, error) {
 
 type failureRepository struct{}
 
-func (failureRepository) SaveSchema(str string) (*Schema, error) {
+func (failureRepository) Save(str string) (*schema.Schema, error) {
 	return nil, errors.New("this means nothing asdjfio")
 }
 
@@ -42,9 +42,9 @@ var _ = Describe("Main", func() {
 	Describe("#RegisterSchema", func() {
 		var (
 			validator  schema.Validator
-			repository DataRepository
+			repository schema.DataRepository
 
-			schema *Schema
+			schema *schema.Schema
 			err    error
 		)
 
