@@ -26,7 +26,7 @@ func RegisterSchema(schemaStr string, validator schema.Validator, repo schema.Da
 		return nil, err
 	}
 
-	schema, err := repo.Save(schemaStr)
+	schema, err := repo.Save(schemaStr, nil)
 	if err != nil {
 		return nil, err
 	}
