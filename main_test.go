@@ -3,6 +3,7 @@ package main_test
 import (
 	"errors"
 
+	"github.com/google/uuid"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -22,10 +23,26 @@ func (successValidator) Validate(str string) error {
 	return nil
 }
 
+type successRepository struct{}
+
+func (successRepository) SaveSchema(schemaStr string) (*Schema, error) {
+	return &Schema{
+		JSONSchema: schemaStr,
+		ID:         uuid.New(),
+	}, nil
+}
+
+type failureRepository struct{}
+
+func (failureRepository) SaveSchema(str string) (*Schema, error) {
+	return nil, errors.New("this means nothing asdjfio")
+}
+
 var _ = Describe("Main", func() {
 	Describe("#RegisterSchema", func() {
 		var (
-			validator schema.Validator
+			validator  schema.Validator
+			repository DataRepository
 
 			schema *Schema
 			err    error
@@ -33,26 +50,38 @@ var _ = Describe("Main", func() {
 
 		BeforeEach(func() {
 			validator = successValidator{}
+			repository = successRepository{}
 		})
 
 		JustBeforeEach(func() {
-			schema, err = RegisterSchema("{}", validator)
+			schema, err = RegisterSchema("{asdfgh}", validator, repository)
 		})
 
-		It("should work", func() {
-			Ω(err).ShouldNot(HaveOccurred())
-			Ω(schema.JSONSchema).Should(Equal("{}"))
-			Ω(schema.ID).ShouldNot(BeNil())
+		Context("when there are no errors", func() {
+			It("should return the new schema", func() {
+				Ω(err).ShouldNot(HaveOccurred())
+				Ω(schema.JSONSchema).Should(Equal("{asdfgh}"))
+				Ω(schema.ID).ShouldNot(BeNil())
+			})
 		})
 
 		Context("when the schema string is invalid", func() {
-
 			BeforeEach(func() {
 				validator = invalidValidator{}
 			})
 
 			It("should return an error", func() {
-				Ω(err).Should(HaveOccurred())
+				Ω(err).Should(MatchError("invalid"))
+			})
+		})
+
+		Context("when the repository fails to save", func() {
+			BeforeEach(func() {
+				repository = failureRepository{}
+			})
+
+			It("should return the error", func() {
+				Ω(err).Should(MatchError("this means nothing asdjfio"))
 			})
 		})
 	})
