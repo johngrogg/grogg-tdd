@@ -18,10 +18,16 @@ type Repository struct{}
 
 // Save persists the JSON Schema into our database
 func (Repository) Save(json string, orm ORM) (*Schema, error) {
+	uuid, err := orm.Insert(json)
+	if err != nil {
+		return nil, err
+	}
+
 	schema := &Schema{
 		JSONSchema: json,
-		ID:         uuid.New(),
+		ID:         uuid,
 	}
+
 	return schema, nil
 }
 
