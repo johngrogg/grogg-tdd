@@ -14,6 +14,7 @@ As you go forward in the commit history, this README will be updated with an exp
 - The schema is stored in our database only if it is a valid [JSON-Schema](https://json-schema.org) document
 
 ## Code State
+- Refactor code organization and some naming to better fit Go standard patterns
 - Impelment use of ORM abstraction, but ORM still not actually implemented, so the build app still fails.
 - Add ORM abstraction to DataRepository, implemented first test for DataRepository#Save, but failing due to lack of implementation.
 - Finished implementing the RegisterSchema, using a stub of a DataRepository. All tests passing, but the buit app encounters an error like `panic: runtime error: invalid memory address or nil pointer dereference` because the DataRepository is not actually implemented.

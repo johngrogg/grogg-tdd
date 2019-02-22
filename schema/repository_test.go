@@ -10,15 +10,15 @@ import (
 	. "github.com/weconnect/grogg-tdd/schema"
 )
 
-type successfulInsert struct{}
+type successfulMockInsert struct{}
 
-func (successfulInsert) Insert(str string) (uuid.UUID, error) {
+func (successfulMockInsert) Insert(str string) (uuid.UUID, error) {
 	return uuid.New(), nil
 }
 
-type invalidInsert struct{}
+type invalidMockInsert struct{}
 
-func (invalidInsert) Insert(str string) (uuid.UUID, error) {
+func (invalidMockInsert) Insert(str string) (uuid.UUID, error) {
 	return uuid.New(), errors.New("db insert fail")
 }
 
@@ -30,7 +30,7 @@ var _ = Describe("Repository", func() {
 	)
 
 	BeforeEach(func() {
-		orm = successfulInsert{}
+		orm = successfulMockInsert{}
 		repository = Repository{}
 	})
 
@@ -54,7 +54,7 @@ var _ = Describe("Repository", func() {
 
 		Context("when the ORM fails to save", func() {
 			BeforeEach(func() {
-				orm = invalidInsert{}
+				orm = invalidMockInsert{}
 			})
 
 			It("should return the error", func() {

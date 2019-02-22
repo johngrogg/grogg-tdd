@@ -8,9 +8,9 @@ type Schema struct {
 	ID         uuid.UUID
 }
 
-// DataRepository is basic data persistence abstraction
-type DataRepository interface {
-	Save(string, ORM) (*Schema, error)
+// ORM works with the database
+type ORM interface {
+	Insert(string) (uuid.UUID, error)
 }
 
 // Repository validates json schema strings
@@ -29,9 +29,4 @@ func (Repository) Save(json string, orm ORM) (*Schema, error) {
 	}
 
 	return schema, nil
-}
-
-// ORM works with the database
-type ORM interface {
-	Insert(string) (uuid.UUID, error)
 }
