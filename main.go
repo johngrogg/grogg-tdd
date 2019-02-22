@@ -5,31 +5,16 @@ import (
 	"os"
 
 	"github.com/weconnect/grogg-tdd/schema"
+	"github.com/weconnect/grogg-tdd/schema/validators"
 )
 
 func main() {
 	inputSchemaString := os.Args[1]
-	schema, err := RegisterSchema(inputSchemaString, schema.JSONValidator{}, schema.Repository{})
+	registeredSchema, err := schema.Register(inputSchemaString, validators.JSONValidator{}, schema.Repository{})
 	if err != nil {
-		fmt.Println(err)
-		return
+		panic(err)
 	}
 
-	fmt.Println("Saved as: " + schema.ID.String())
-	fmt.Println("Schema that was saved: " + schema.JSONSchema)
-}
-
-// RegisterSchema validates and stores a new JSON Schema
-func RegisterSchema(schemaStr string, validator schema.Validator, repo schema.DataRepository) (*schema.Schema, error) {
-
-	if err := validator.Validate(schemaStr); err != nil {
-		return nil, err
-	}
-
-	schema, err := repo.Save(schemaStr, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return schema, nil
+	fmt.Println("Saved as: " + registeredSchema.ID.String())
+	fmt.Println("Schema that was saved: " + registeredSchema.JSONSchema)
 }

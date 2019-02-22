@@ -7,7 +7,6 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.com/weconnect/grogg-tdd"
 	"github.com/weconnect/grogg-tdd/schema"
 )
 
@@ -38,14 +37,15 @@ func (failureRepository) Save(str string, orm schema.ORM) (*schema.Schema, error
 	return nil, errors.New("this means nothing asdjfio")
 }
 
+// could maybe move some of this to register_test.go???
 var _ = Describe("Main", func() {
 	Describe("#RegisterSchema", func() {
 		var (
 			validator  schema.Validator
 			repository schema.DataRepository
 
-			schema *schema.Schema
-			err    error
+			registeredSchema *schema.Schema
+			err              error
 		)
 
 		BeforeEach(func() {
@@ -54,14 +54,14 @@ var _ = Describe("Main", func() {
 		})
 
 		JustBeforeEach(func() {
-			schema, err = RegisterSchema("{asdfgh}", validator, repository)
+			registeredSchema, err = schema.Register("{asdfgh}", validator, repository)
 		})
 
 		Context("when there are no errors", func() {
 			It("should return the new schema", func() {
 				Ω(err).ShouldNot(HaveOccurred())
-				Ω(schema.JSONSchema).Should(Equal("{asdfgh}"))
-				Ω(schema.ID).ShouldNot(BeNil())
+				Ω(registeredSchema.JSONSchema).Should(Equal("{asdfgh}"))
+				Ω(registeredSchema.ID).ShouldNot(BeNil())
 			})
 		})
 
